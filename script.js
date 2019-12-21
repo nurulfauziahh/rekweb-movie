@@ -26,7 +26,7 @@ function showMovies(movies) {
 			  <div class="card-body">
 			    <h5 class="card-title">${movie.Title}</h5>
 			   	 <h6 class="card-subtitle mb-2 text-muted">${movie.Year}</h6>
-			    <a href="detail.php?id=${movie.imdbID}" class="btn btn-primary">show details</a>
+			    <a href="#" data-id="`+ movie.imdbID +`" class="btn btn-primary see-detail" data-toggle="modal" data-target="#staticBackdrop" data-id="">show details</a>
 				  </div>
 				</div>
     		</div>`;
@@ -56,3 +56,43 @@ inputKeyword.addEventListener('keyup', function(e) {
 	}
 	
 });
+  
+$('.movie-list').on('click','.see-detail', function() {
+		
+		$.ajax({
+			url : 'http://www.omdbapi.com',
+			dataType : 'json',
+			type : 'get',
+			data : {
+					'apikey': '1125e79f',
+					'i' : $(this).data('id')
+			},
+			success : function(movie) {
+				if(movie.Response === "True"){
+					$('.modal-body').html(`
+							<div class="container-fluid">
+								<div class="row">
+										<div class="col-md-4">
+										<img src="`+ movie.Poster +`" class="img-fluid">
+										</div>
+
+										<div class="col-md-8">
+											<ul class="list-group">
+											  <li class="list-group-item"><h3>`+movie.Title+`</h3></li>
+											  <li class="list-group-item"><h3>`+movie.Released+`</h3></li>
+											  <li class="list-group-item"><h3>`+movie.Genre+`</h3></li>
+											  <li class="list-group-item"><h3>`+movie.Director+`</h3></li>
+											  <li class="list-group-item"><h3>`+movie.Actors+`</h3></li>
+											 
+											</ul>
+										</div>
+									</div>
+							</div>
+						`);
+				}
+			}
+					
+		});
+
+});
+
